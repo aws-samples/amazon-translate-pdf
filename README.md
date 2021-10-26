@@ -62,15 +62,11 @@ As you run these samples they call different Amazon Textract and Amazon Translat
 
 [1][large scale document processing with amazon textract - reference architecture] (https://github.com/aws-samples/amazon-textract-serverless-large-scale-document-processing)
 
-[2][generating-searchable-pdfs-from-scanned-documents-automatically-with-amazon-textract] (https://aws.amazon.com/blogs/machine-learning/designing-human-review-workflows-with-amazon-translate-and-amazon-augmented-ai/)
+[2][generating-searchable-pdfs-from-scanned-documents-automatically-with-amazon-textract] (https://aws.amazon.com/blogs/machine-learning/generating-searchable-pdfs-from-scanned-documents-automatically-with-amazon-textract/)
 
-[3][aws blog designing human review workflows with amazon translate and amazon augmented ai] (https://aws.amazon.com/blogs/machine-learning/generating-searchable-pdfs-from-scanned-documents-automatically-with-amazon-textract/)
+[3]Amazon Textract code samples (https://github.com/aws-samples/amazon-textract-code-samples)
 
-[4]Amazon Textract code samples
-
-[5]Amazon Translate code samples
-
-[6]JSON response parser
+[4]Amazon Translate code samples (https://github.com/aws-samples/amazon-translate-text-extract-sample)
 
 ### License
 
