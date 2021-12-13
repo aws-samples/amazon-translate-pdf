@@ -1,40 +1,32 @@
 import com.amazon.textract.pdf.ImageType;
 import com.amazon.textract.pdf.PDFDocument;
 import com.amazon.textract.pdf.TextLine;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.services.textract.AmazonTextract;
 import com.amazonaws.services.textract.AmazonTextractClientBuilder;
 import com.amazonaws.services.textract.model.*;
 import com.amazonaws.services.translate.AmazonTranslate;
-import com.amazonaws.services.translate.AmazonTranslateClient;
 import com.amazonaws.services.translate.AmazonTranslateClientBuilder;
 import com.amazonaws.services.translate.model.TranslateTextRequest;
 import com.amazonaws.services.translate.model.TranslateTextResult;
-import org.apache.pdfbox.pdfparser.PDFStreamParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.tools.imageio.ImageIOUtil;
+import org.apache.logging.log4j.Logger;
+import static org.apache.logging.log4j.LogManager.*;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class DemoPdfFromLocalPdf {
+    private static final Logger logger = getLogger(DemoPdfFromLocalPdf.class.getName());
 
     private List<TextLine> extractTextAndTranslate(ByteBuffer imageBytes, String sourceLanguage, String destinationLanguage) {
         AmazonTranslate translateClient = AmazonTranslateClientBuilder.defaultClient();
 
-        System.out.println("extracting text");
+        logger.info("extracting text");
 
         AmazonTextract client = AmazonTextractClientBuilder.defaultClient();
 
@@ -44,15 +36,12 @@ public class DemoPdfFromLocalPdf {
 
         DetectDocumentTextResult result = client.detectDocumentText(request);
 
-        //System.out.println("extracting text result " + result);
-
         List<Block> blocks = result.getBlocks();
         List<TextLine> lines = new ArrayList<TextLine>();
         BoundingBox boundingBox;
 
         for (Block block : blocks) {
             if ((block.getBlockType()).equals("LINE")) {
-                //System.out.println("TEXT SOURCE " + block.getText());
                 String source = block.getText();
                 TranslateTextRequest requestTranlate = new TranslateTextRequest()
                         .withText(source)
@@ -74,7 +63,7 @@ public class DemoPdfFromLocalPdf {
 
     public void run(String documentName, String outputDocumentName, String sourceLanguage, String destinationLanguage, boolean retainFormatting) throws IOException {
 
-        System.out.println("Generating searchable pdf from: " + documentName);
+        logger.info("Generating searchable pdf from: " + documentName);
 
         PDFDocument pdfDocument = new PDFDocument();
 
@@ -88,7 +77,7 @@ public class DemoPdfFromLocalPdf {
         PDFRenderer pdfRenderer = new PDFRenderer(inputDocument);
         for (int page = 0; page < inputDocument.getNumberOfPages(); ++page) {
             int pageNumber = page + 1;
-            System.out.println("processing page " + pageNumber);
+            logger.info("processing page " + pageNumber);
             //Render image
             image = pdfRenderer.renderImage(page, 1, org.apache.pdfbox.rendering.ImageType.RGB);
 
@@ -108,7 +97,7 @@ public class DemoPdfFromLocalPdf {
             else
                 pdfDocument.addPageWithoutFormatting(image, lines);
 
-            System.out.println("Processed page " + pageNumber);
+            logger.info("Processed page " + pageNumber);
         }
 
         inputDocument.close();
@@ -119,7 +108,7 @@ public class DemoPdfFromLocalPdf {
             pdfDocument.close();
         }
 
-        System.out.println("Generated searchable pdf: " + outputDocumentName);
+        logger.info("Generated searchable pdf: " + outputDocumentName);
     }
 
 }

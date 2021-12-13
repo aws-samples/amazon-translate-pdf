@@ -50,8 +50,6 @@ public class PDFDocument {
             }
         }
 
-        //System.out.println("Text height before returning font size: " + textHeight);
-
         FontInfo fi = new FontInfo();
         fi.fontSize = fontSize;
         fi.textHeight = textHeight;

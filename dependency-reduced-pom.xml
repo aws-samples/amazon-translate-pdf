@@ -26,7 +26,11 @@
               <transformers>
                 <transformer>
                   <mainClass>Demo</mainClass>
+                  <manifestEntries>
+                    <Multi-Release>true</Multi-Release>
+                  </manifestEntries>
                 </transformer>
+                <transformer />
               </transformers>
             </configuration>
           </execution>
