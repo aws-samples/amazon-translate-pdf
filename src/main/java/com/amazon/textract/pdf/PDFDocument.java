@@ -30,8 +30,8 @@ public class PDFDocument {
     /*
     Depending on the input document you can adjust the initial font size and the width and height of the extracted text
      */
-    private FontInfo calculateFontSize(String text, float bbWidth, float bbHeight) throws IOException {
-        int fontSize = 17;
+    private FontInfo calculateFontSize(String text, float bbWidth, float bbHeight,  PDFont font) throws IOException {
+        int fontSize = 20;
         float textWidth = font.getStringWidth(text) / 1000 * fontSize;
         float textHeight = font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
 
@@ -58,43 +58,40 @@ public class PDFDocument {
         return fi;
     }
 
-    public void addPageWithoutFormatting(BufferedImage image, List<TextLine> lines) throws IOException {
+    public void addPageWithoutFormatting(BufferedImage image, ImageType imageType, List<TextLine> lines) throws IOException {
+        try {
+            float width = image.getWidth();
+            float height = image.getHeight();
 
-        float width = image.getWidth();
-        float height = image.getHeight();
+            PDRectangle box = new PDRectangle(width, height);
+            PDPage page = new PDPage(box);
+            page.setMediaBox(box);
+            this.document.addPage(page);
 
-        PDRectangle box = new PDRectangle(width, height);
-        PDPage page = new PDPage(box);
-        page.setMediaBox(box);
-        this.document.addPage(page);
+            PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, false);
 
-        PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, false);
+            for (TextLine cline : lines) {
+                String clinetext = cline.text;
+                //clinetext = removeNonWinAnsiCharactersAndFixNonAsciiSingle(clinetext);
+                String clinetextOriginal = cline.originalText;
+                //clinetextOriginal = removeNonWinAnsiCharactersAndFixNonAsciiSingle(clinetextOriginal);
+                FontInfo fontInfo = calculateFontSize(clinetext.length() <= clinetextOriginal.length() ? clinetextOriginal : clinetext, (float) cline.width * width, (float) cline.height * height, font);
+                //config for no images
+                contentStream.setNonStrokingColor(Color.BLACK);
+                contentStream.beginText();
+                contentStream.setFont(font, fontInfo.fontSize);
+                contentStream.newLineAtOffset((float) cline.left * width, (float) (height - height * cline.top - fontInfo.textHeight));
 
-        contentStream.setRenderingMode(RenderingMode.STROKE);
+                contentStream.showText(clinetext);
 
-        for (TextLine cline : lines){
-            String clinetext = cline.text;
+                contentStream.endText();
+            }
 
-            FontInfo fontInfo = calculateFontSize(clinetext, (float)cline.width*width, (float)cline.height*height);
-            //config for no images
-            contentStream.setStrokingColor(Color.BLACK);
-            contentStream.setNonStrokingColor(Color.GRAY);
-            contentStream.setRenderingMode(RenderingMode.FILL_STROKE);
-
-            contentStream.addRect((float)cline.left*width, (float) (height-height*cline.top-fontInfo.textHeight), (float)cline.width*width, (float)cline.height*height);
-
-            //change the output text color here
-            contentStream.setNonStrokingColor(Color.BLACK);
-            contentStream.beginText();
-            contentStream.setFont(this.font, fontInfo.fontSize);
-            contentStream.newLineAtOffset((float)cline.left*width, (float)(height-height*cline.top-fontInfo.textHeight));
-
-            contentStream.showText(clinetext);
-
-            contentStream.endText();
+            contentStream.close();
+        } catch (Exception ex) {
+            //lambdaLogger.log("\naddPageWithoutFormatting:ERROR" + ex.getMessage());
+            //throw new AppException(ex.getMessage());
         }
-
-        contentStream.close();
     }
 
     //code for images
@@ -125,21 +122,29 @@ public class PDFDocument {
 
         for (TextLine cline : lines){
             String clinetext = cline.text;
+               
+                String clinetextOriginal = cline.originalText;
+             
+               
+                FontInfo fontInfo = calculateFontSize(clinetextOriginal, (float) cline.width * width, (float) cline.height * height, font);
+                //config to include original document structure - overlay with original
+                contentStream.setNonStrokingColor(Color.WHITE);
+                contentStream.addRect((float) cline.left * width, (float) (height - height * cline.top - fontInfo.textHeight), (float) cline.width * width, (float) cline.height * height);
+                contentStream.fill();
 
-            FontInfo fontInfo = calculateFontSize(clinetext, (float)cline.width*width, (float)cline.height*height);
-
-            //configto include original document structure
-            contentStream.setNonStrokingColor(Color.WHITE);
-            contentStream.addRect((float)cline.left*width, (float) (height-height*cline.top-fontInfo.textHeight), (float)cline.width*width, (float)cline.height*height);
-
-            contentStream.fill();
-            //change the output text color here
-            contentStream.setNonStrokingColor(Color.BLACK);
-            contentStream.beginText();
-            contentStream.setFont(this.font, fontInfo.fontSize);
-            contentStream.newLineAtOffset((float)cline.left*width, (float)(height-height*cline.top-fontInfo.textHeight));
-            contentStream.showText(clinetext);
-            contentStream.endText();
+                fontInfo = calculateFontSize(clinetext, (float) cline.width * width, (float) cline.height * height, font);
+                //config to include original document structure - overlay with translated
+                contentStream.setNonStrokingColor(Color.WHITE);
+                contentStream.addRect((float) cline.left * width, (float) (height - height * cline.top - fontInfo.textHeight), (float) cline.width * width, (float) cline.height * height);
+                contentStream.fill();
+                //change the output text color here
+                fontInfo = calculateFontSize(clinetext.length() <= clinetextOriginal.length() ? clinetextOriginal : clinetext, (float) cline.width * width, (float) cline.height * height, font);
+                contentStream.setNonStrokingColor(Color.BLACK);
+                contentStream.beginText();
+                contentStream.setFont(font, fontInfo.fontSize);
+                contentStream.newLineAtOffset((float) cline.left * width, (float) (height - height * cline.top - fontInfo.textHeight));
+                contentStream.showText(clinetext);
+                contentStream.endText();
         }
         contentStream.close();
     }

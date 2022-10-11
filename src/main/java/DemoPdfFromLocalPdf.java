@@ -26,7 +26,7 @@ public class DemoPdfFromLocalPdf {
     private List<TextLine> extractTextAndTranslate(ByteBuffer imageBytes, String sourceLanguage, String destinationLanguage) {
         AmazonTranslate translateClient = AmazonTranslateClientBuilder.defaultClient();
 
-        logger.info("extracting text");
+        logger.info("Extracting text");
 
         AmazonTextract client = AmazonTextractClientBuilder.defaultClient();
 
@@ -55,7 +55,8 @@ public class DemoPdfFromLocalPdf {
                         boundingBox.getTop(),
                         boundingBox.getWidth(),
                         boundingBox.getHeight(),
-                        resultTranslate.getTranslatedText()));
+                        resultTranslate.getTranslatedText(),
+                        source));
             }
         }
         return lines;
@@ -95,7 +96,7 @@ public class DemoPdfFromLocalPdf {
                 pdfDocument.addPageWithFormatting(image, ImageType.JPEG, lines);
                 //Add page without text layer and image in the pdf document
             else
-                pdfDocument.addPageWithoutFormatting(image, lines);
+                pdfDocument.addPageWithoutFormatting(image, ImageType.JPEG, lines);
 
             logger.info("Processed page " + pageNumber);
         }
