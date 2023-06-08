@@ -16,9 +16,8 @@ public class Demo {
             String sourceLanguage = args[1];
             String destinationLanguage = args[3];
             DemoPdfFromLocalPdf localPdf = new DemoPdfFromLocalPdf();
-            localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-" + destinationLanguage + ".pdf ",
-                    "en", "es", true);
-            localPdf.run("./documents/SampleInput.pdf",     "./documents/SampleOutput-min-" + destinationLanguage + ".pdf ",
+            localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-" + destinationLanguage + ".pdf ", sourceLanguage, destinationLanguage, true);
+            localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-min-" + destinationLanguage + ".pdf ",
                     sourceLanguage, destinationLanguage, false);
         } catch (Exception e) {
             e.printStackTrace();

@@ -8,19 +8,29 @@
     <version>1.0</version>
     <properties>
         <java.version>11</java.version>
+        <aws.java.sdk.version>2.20.81</aws.java.sdk.version>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.java.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-textract -->
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-textract</artifactId>
-            <version>1.12.139</version>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>textract</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-translate</artifactId>
-            <version>1.12.139</version>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>translate</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
         <dependency>
