@@ -58,10 +58,6 @@ Run: "java -jar target/translate-pdf-1.0.jar --source en --translated es" to run
 
 As you run these samples they call different Amazon Textract and Amazon Translate APIs in your AWS account. You will get charged for all the API calls made as part of the analysis.
 
-#### AWS JAVA SDK V2 Sample
-
-Branch awssdkv2 contains sample code to use AWS Java SDK V2
-
 #### Other Resources
 
 [1][large scale document processing with amazon textract - reference architecture] (https://github.com/aws-samples/amazon-textract-serverless-large-scale-document-processing)
