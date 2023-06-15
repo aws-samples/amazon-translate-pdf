@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.amazon.textract.solutions</groupId>
   <artifactId>translate-pdf</artifactId>
-  <version>1.0</version>
+  <version>2.0</version>
   <build>
     <plugins>
       <plugin>
@@ -46,7 +46,19 @@
       </plugin>
     </plugins>
   </build>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bom</artifactId>
+        <version>${aws.java.sdk.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <properties>
+    <aws.java.sdk.version>2.20.81</aws.java.sdk.version>
     <java.version>11</java.version>
   </properties>
 </project>

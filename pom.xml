@@ -5,22 +5,32 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.amazon.textract.solutions</groupId>
     <artifactId>translate-pdf</artifactId>
-    <version>1.0</version>
+    <version>2.0</version>
     <properties>
         <java.version>11</java.version>
+        <aws.java.sdk.version>2.20.81</aws.java.sdk.version>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.java.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-textract -->
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-textract</artifactId>
-            <version>1.12.470</version>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>textract</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-translate</artifactId>
-            <version>1.12.469</version>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>translate</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
         <dependency>
@@ -41,17 +51,15 @@
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>jbig2-imageio</artifactId>
-            <version>3.0.4</version>
+            <version>3.0.2</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/log4j/log4j -->
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.20.0</version>
+            <version>2.17.1</version>
         </dependency>
-
-
     </dependencies>
     <build>
         <plugins>

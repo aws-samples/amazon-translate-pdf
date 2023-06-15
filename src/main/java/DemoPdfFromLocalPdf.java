@@ -1,18 +1,17 @@
 import com.amazon.textract.pdf.ImageType;
 import com.amazon.textract.pdf.PDFDocument;
 import com.amazon.textract.pdf.TextLine;
-import com.amazonaws.services.textract.AmazonTextract;
-import com.amazonaws.services.textract.AmazonTextractClientBuilder;
-import com.amazonaws.services.textract.model.*;
-import com.amazonaws.services.translate.AmazonTranslate;
-import com.amazonaws.services.translate.AmazonTranslateClientBuilder;
-import com.amazonaws.services.translate.model.TranslateTextRequest;
-import com.amazonaws.services.translate.model.TranslateTextResult;
+import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.tools.imageio.ImageIOUtil;
-import org.apache.logging.log4j.Logger;
-import static org.apache.logging.log4j.LogManager.*;
+import software.amazon.awssdk.core.SdkBytes;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.textract.TextractClient;
+import software.amazon.awssdk.services.textract.model.*;
+import software.amazon.awssdk.services.translate.TranslateClient;
+import software.amazon.awssdk.services.translate.model.TranslateTextRequest;
+import software.amazon.awssdk.services.translate.model.TranslateTextResponse;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -20,42 +19,56 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 public class DemoPdfFromLocalPdf {
     private static final Logger logger = getLogger(DemoPdfFromLocalPdf.class.getName());
 
     private List<TextLine> extractTextAndTranslate(ByteBuffer imageBytes, String sourceLanguage, String destinationLanguage) {
-        AmazonTranslate translateClient = AmazonTranslateClientBuilder.defaultClient();
-
         logger.info("Extracting text");
+        Region region = Region.US_EAST_1;
+        TextractClient textractClient = TextractClient.builder()
+                .region(region)
+                .build();
 
-        AmazonTextract client = AmazonTextractClientBuilder.defaultClient();
+        // Get the input Document object as bytes
+        Document pdfDoc = Document.builder()
+                .bytes(SdkBytes.fromByteBuffer(imageBytes))
+                .build();
 
-        DetectDocumentTextRequest request = new DetectDocumentTextRequest()
-                .withDocument(new Document()
-                        .withBytes(imageBytes));
+        TranslateClient translateClient = TranslateClient.builder()
+                .region(region)
+                .build();
 
-        DetectDocumentTextResult result = client.detectDocumentText(request);
+        DetectDocumentTextRequest detectDocumentTextRequest = DetectDocumentTextRequest.builder()
+                .document(pdfDoc)
+                .build();
 
-        List<Block> blocks = result.getBlocks();
-        List<TextLine> lines = new ArrayList<TextLine>();
+        // Invoke the Detect operation
+        DetectDocumentTextResponse textResponse = textractClient.detectDocumentText(detectDocumentTextRequest);
+
+        List<Block> blocks = textResponse.blocks();
+        List<TextLine> lines = new ArrayList<>();
         BoundingBox boundingBox;
 
         for (Block block : blocks) {
-            if ((block.getBlockType()).equals("LINE")) {
-                String source = block.getText();
-                TranslateTextRequest requestTranlate = new TranslateTextRequest()
-                        .withText(source)
-                        .withSourceLanguageCode(sourceLanguage)
-                        .withTargetLanguageCode(destinationLanguage);
+            if ((block.blockType()).equals(BlockType.LINE)) {
+                String source = block.text();
 
-                TranslateTextResult resultTranslate = translateClient.translateText(requestTranlate);
+                TranslateTextRequest requestTranslate = TranslateTextRequest.builder()
+                        .sourceLanguageCode(sourceLanguage)
+                        .targetLanguageCode(destinationLanguage)
+                        .text(source)
+                        .build();
 
-                boundingBox = block.getGeometry().getBoundingBox();
-                lines.add(new TextLine(boundingBox.getLeft(),
-                        boundingBox.getTop(),
-                        boundingBox.getWidth(),
-                        boundingBox.getHeight(),
-                        resultTranslate.getTranslatedText(),
+                TranslateTextResponse resultTranslate = translateClient.translateText(requestTranslate);
+
+                boundingBox = block.geometry().boundingBox();
+                lines.add(new TextLine(boundingBox.left(),
+                        boundingBox.top(),
+                        boundingBox.width(),
+                        boundingBox.height(),
+                        resultTranslate.translatedText(),
                         source));
             }
         }
@@ -70,8 +83,8 @@ public class DemoPdfFromLocalPdf {
 
         List<TextLine> lines;
         BufferedImage image;
-        ByteArrayOutputStream byteArrayOutputStream = null;
-        ByteBuffer imageBytes = null;
+        ByteArrayOutputStream byteArrayOutputStream;
+        ByteBuffer imageBytes;
 
         //Load pdf document and process each page as image
         PDDocument inputDocument = PDDocument.load(new File(documentName));
@@ -86,7 +99,9 @@ public class DemoPdfFromLocalPdf {
             byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIOUtil.writeImage(image, "jpeg", byteArrayOutputStream);
             byteArrayOutputStream.flush();
+            InputStream sourceStream = new FileInputStream(documentName);
             imageBytes = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
+
 
             //Extract text
             lines = extractTextAndTranslate(imageBytes, sourceLanguage, destinationLanguage);
