@@ -60,7 +60,7 @@ As you run these samples they call different Amazon Textract and Amazon Translat
 
 #### AWS JAVA SDK V1
 
-Note: AWS SDK V1 is EOL 
+This branch includes samples for AWS Java SDK V1
 
 #### Other Resources
 
