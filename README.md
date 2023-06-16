@@ -48,7 +48,7 @@ Create translated PDF from pdf on local drive
 ### Run code examples on local machine
 
 Setup AWS Account and AWS CLI using getting started with Amazon Textract.  
-Git clone the sample project (need to add to AWS samples) or Download and unzip PDFTranslate.zip from the GitHub repo(add link to downloadable zip)
+Git clone or download and unzip PDFTranslate-2.0.zip
 Install Apache Maven if it is not already installed.  
 In the project directory run "mvn package".  
 Run: "java -jar target/translate-pdf-1.0.jar --source en --translated es" to run the Java project.  
