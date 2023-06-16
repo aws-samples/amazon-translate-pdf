@@ -62,6 +62,26 @@ As you run these samples they call different Amazon Textract and Amazon Translat
 
 This branch includes samples for AWS Java SDK V1
 
+Note: AWS Java SDK V1 has the following vulnerability and therefore it is recommend to use the Java SDK V2
+    
+CVE-2016-10320  suppress
+
+textract before 1.5.0 allows OS Command Injection attacks via a filename in a call to the process function. This may be a remote attack if a web application accepts names of arbitrary uploaded files.
+CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')
+
+CVSSv2:
+Base Score: HIGH (9.3)
+Vector: /AV:N/AC:M/Au:N/C:C/I:C/A:C
+CVSSv3:
+Base Score: HIGH (7.8)
+Vector: CVSS:3.0/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H
+
+References:
+MISC - http://seclists.org/oss-sec/2016/q4/442
+Vulnerable Software & Versions:
+
+cpe:2.3:a:textract_project:textract:*:*:*:*:*:*:*:* versions up to (including) 1.4.0
+
 #### Other Resources
 
 [1][large scale document processing with amazon textract - reference architecture] (https://github.com/aws-samples/amazon-textract-serverless-large-scale-document-processing)
