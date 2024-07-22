@@ -16,9 +16,10 @@ public class Demo {
             String sourceLanguage = args[1];
             String destinationLanguage = args[3];
             DemoPdfFromLocalPdf localPdf = new DemoPdfFromLocalPdf();
+            // Change the final param on the next line to true to run in overlay mode, or false to run in minimal mode
             localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-" + destinationLanguage + ".pdf ", sourceLanguage, destinationLanguage, true);
-            localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-min-" + destinationLanguage + ".pdf ",
-                    sourceLanguage, destinationLanguage, false);
+            //localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-min-" + destinationLanguage + ".pdf ",
+                    //sourceLanguage, destinationLanguage, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
