@@ -1,6 +1,6 @@
 ### Translating PDF Documents with Amazon Textract, Amazon Translate and PDFBox while Retaining the Original PDF Formatting
 
-This repository contains a sample library and code examples showing how Amazon Textract, Amazon Translate can be used to extract and translate text from documents and use PDFBox to create a translated pdf while retaining the original formatting.
+This repository contains a sample library and code examples showing how Amazon Textract and Amazon Translate can be used to extract and translate text from documents and use PDFBox to create a translated pdf while retaining the original formatting.
 
 #### How is the translated PDF generated
 
@@ -10,9 +10,13 @@ Amazon Textract detects and analyzes text input documents and returns informatio
 
 Amazon Translate is a neural machine translation service that delivers fast, high-quality, and affordable language translation. Amazon Translate provides high quality on-demand and batch translation capabilities across more than 2970 language pairs, while decreasing your translation costs.
 
-SampleInput.pdf is an example input document in English. SampleOutput-es.pdf is the translated pdf document in Spanish with all the formatting of the original document retained.
+SampleInput.pdf is an example input document in English. SampleOutput-es.pdf is the translated pdf document in Spanish with all the formatting of the original document retained. SampleOutput-ja-min.pdf is the translated pdf document in Japanese using minimal mode and an external TrueType font file.
 
 PDFDocument library wraps all the necessary logic to generate the translated PDF document using output from Amazon Textract and Amazon Translate. It also uses open source Java library Apache PDFBox to create the PDF document but there similar pdf processing libraries available in other programming languages.
+
+#### Code examples
+
+Create translated PDF from pdf on local drive
 
     ...
 
@@ -41,22 +45,20 @@ PDFDocument library wraps all the necessary logic to generate the translated PDF
                 else
                     pdfDocument.addPageWithoutFormatting(image, lines);
 
-#### Code examples
-
-Create translated PDF from pdf on local drive
-
 ### Run code examples on local machine
 
-Setup AWS Account and AWS CLI using getting started with Amazon Textract.  
-Git clone or download and unzip PDFTranslate-2.0.zip
-Install Apache Maven if it is not already installed.  
-In the project directory run "mvn package".  
-Run: "java -jar target/translate-pdf-1.0.jar --source en --translated es" to run the Java project.  
-(see for https://aws.amazon.com/textract/ the languages Textract currently supports and for the https://docs.aws.amazon.com/translate/latest/dg/what-is.html#what-is-languages language codes
+1. Git clone or download and unzip this repository.
+2. Install Apache Maven if it is not already installed.
+3. In Demo.java, set localPdf.run(retainFormatting) to true to use overlay mode, or false to use minimal (text only) mode.
+3. If you want to use a custom TrueType Font file for the final PDF, place the .ttf file in src/resources and change the file name in PDFDocument.java, line 40. This Demo was used to translate English to Japanese using Google Noto Sans JP: https://fonts.google.com/noto/specimen/Noto+Sans+JP
+If you want to use a built-in font, uncomment lines 21-33, and comment lines 38-57.
+4. In the project directory run "mvn package".
+5. Run: "java -jar target/translate-pdf-1.0.jar --source en --translated es" to run the Java project. 
+See https://aws.amazon.com/textract/ for the languages Textract currently supports and https://docs.aws.amazon.com/translate/latest/dg/what-is.html#what-is-languages for language codes.
 
 #### Cost
 
-As you run these samples they call different Amazon Textract and Amazon Translate APIs in your AWS account. You will get charged for all the API calls made as part of the analysis.
+As you run these samples they call different Amazon Textract and Amazon Translate APIs in your AWS account. You may be charged for all the API calls made as part of the analysis.
 
 #### Other Resources
 
