@@ -5,6 +5,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
@@ -16,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
 
+/*
+//Use built-in fonts
 public class PDFDocument {
 
     //change the font type here
@@ -26,7 +29,34 @@ public class PDFDocument {
     public PDFDocument(){
         this.document = new PDDocument();
     }
+//End build-in font code
+*/
+    //Comment lines 38-57 to disable external font import.
+    //set the name of your TTF font file here. 
+    //The TTF file goes into the src/resources folder by default
+    //The font used to test this project with Japanese was: https://fonts.google.com/noto/specimen/Noto+Sans+JP
+    public class PDFDocument {
+    private PDDocument document;
+    final PDFont font = loadFontAlternative("/change-me.ttf");
 
+    public PDFDocument(){
+        this.document = new PDDocument();
+    }
+
+    private static PDFont loadFontAlternative(String location) {
+        PDDocument documentMock = new PDDocument();
+        InputStream systemResourceAsStream = PDFDocument.class.getResourceAsStream(location);
+        PDFont font;
+        try {
+            font = PDType0Font.load(documentMock, systemResourceAsStream, true);
+        }
+        catch (IOException e) {
+            throw new RuntimeException("IO exception");
+        }
+        return font;
+    } 
+    
+    //End code to import external font.
     /*
     Depending on the input document you can adjust the initial font size and the width and height of the extracted text
      */
@@ -156,4 +186,5 @@ public class PDFDocument {
     public void close() throws IOException {
         this.document.close();
     }
+    
 }
