@@ -5,7 +5,6 @@
 .project
 .settings
 .vscode
-/src/main/resources/*
 dependency-reduced-pom.xml
 
 # Package Files #
