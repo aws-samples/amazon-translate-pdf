@@ -48,7 +48,7 @@ Create translated PDF from pdf on local drive
 ### Run code examples on local machine
 
 1. Git clone or download and unzip this repository.
-2. If you want to use an external TrueType Font file for PDF output, place the .ttf file in src/resources and add the filename to your prompt in step 5. This Demo was used to translate English to Japanese using Google Noto Sans JP: https://fonts.google.com/noto/specimen/Noto+Sans+JP
+2. If you want to use an external TrueType Font file for PDF output, place the .ttf file in src/main/resources and add the filename to your prompt in step 5. This Demo was used to translate English to Japanese using Google Noto Sans JP: https://fonts.google.com/noto/specimen/Noto+Sans+JP
 3. Install Apache Maven if it is not already installed.
 4. In the project directory run "mvn package".
 5. Authenticate with your AWS Credentials. See the Java SDK documentation for instructions: https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-temporary.html
