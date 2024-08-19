@@ -48,13 +48,12 @@ Create translated PDF from pdf on local drive
 ### Run code examples on local machine
 
 1. Git clone or download and unzip this repository.
-2. Install Apache Maven if it is not already installed.\
-3. If you want to use an external TrueType Font file for PDF output, place the .ttf file in src/resources and add the filename to your prompt in step 5. This Demo was used to translate English to Japanese using Google Noto Sans JP: https://fonts.google.com/noto/specimen/Noto+Sans+JP
-If you want to use a built-in font, uncomment lines 21-33, and comment lines 38-57.
+2. If you want to use an external TrueType Font file for PDF output, place the .ttf file in src/resources and add the filename to your prompt in step 5. This Demo was used to translate English to Japanese using Google Noto Sans JP: https://fonts.google.com/noto/specimen/Noto+Sans+JP
+3. Install Apache Maven if it is not already installed.
 4. In the project directory run "mvn package".
 5. Authenticate with your AWS Credentials. See the Java SDK documentation for instructions: https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-temporary.html
-6. Run: "java -jar target/translate-pdf-3.0.jar --source <en> --translated <es> --font <myfont.ttf>" to run the Java project. This will generate two Sample Output PDFs; one with formatting and one without.
-See https://aws.amazon.com/textract/ for the languages Textract currently supports and https://docs.aws.amazon.com/translate/latest/dg/what-is.html#what-is-languages for language codes. --font flag is optional and used only for external fonts.
+6. Run: "java -jar target/translate-pdf-3.0.jar --source <en> --translated <es> --font <myfont.ttf>" to run the Java project. This will generate two Sample Output PDFs; one with formatting and one without. --font is only required when using a TTF file.
+See https://aws.amazon.com/textract/ for the languages Textract currently supports and https://docs.aws.amazon.com/translate/latest/dg/what-is.html#what-is-languages for language codes. 
 
 #### Cost
 
