@@ -17,49 +17,49 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
 
-/*
-//Use built-in fonts
+
 public class PDFDocument {
 
-    //change the font type here
-    final PDFont font = PDType1Font.COURIER_BOLD;
-
     private PDDocument document;
-
-    public PDFDocument(){
+    private PDFont font;
+    public PDFDocument(PDFont font){
         this.document = new PDDocument();
+        this.font = font;
     }
-//End build-in font code
-*/
-    //Comment lines 38-57 to disable external font import.
-    //set the name of your TTF font file here. 
-    //The TTF file goes into the src/resources folder by default
-    //The font used to test this project with Japanese was: https://fonts.google.com/noto/specimen/Noto+Sans+JP
-    public class PDFDocument {
-    private PDDocument document;
-    final PDFont font = loadFontAlternative("/change-me.ttf");
-
-    public PDFDocument(){
-        this.document = new PDDocument();
-    }
-
-    private static PDFont loadFontAlternative(String location) {
-        PDDocument documentMock = new PDDocument();
-        InputStream systemResourceAsStream = PDFDocument.class.getResourceAsStream(location);
-        PDFont font;
-        try {
-            font = PDType0Font.load(documentMock, systemResourceAsStream, true);
-        }
-        catch (IOException e) {
-            throw new RuntimeException("IO exception");
-        }
-        return font;
-    } 
     
-    //End code to import external font.
-    /*
-    Depending on the input document you can adjust the initial font size and the width and height of the extracted text
-     */
+    // public PDFont loadFont(String externalFontPath) {
+    //     //PDFont font = null;
+    //     InputStream fontStream = null;
+    //     try { 
+    //         fontStream = PDFDocument.class.getResourceAsStream("/" + externalFontPath);
+    //         if (externalFontPath == null) {
+    //             // Use a default font
+    //             font = PDType1Font.COURIER_BOLD;
+    //         } else {
+    //             if (fontStream == null) {
+    //                 throw new IllegalArgumentException("External font resource not found: " + externalFontPath);
+    //             }
+    
+    //             try {
+    //                 font = PDType0Font.load(document, fontStream, true);
+    //             } catch (IOException e) {
+    //                 throw new RuntimeException("Failed to load external font: " + externalFontPath, e);
+    //             }
+    //         }
+    //     } catch (Exception e) {
+    //         // Handle or log the exception as needed
+    //     } finally {
+    //         try {
+    //             if (fontStream != null) {
+    //                 fontStream.close(); // Closing the fontStream resource
+    //             }
+    //         } catch (IOException e) {
+    //             // Handle or log the exception as needed
+    //         }
+    //     }
+    //     return font;
+    // }
+
     private FontInfo calculateFontSize(String text, float bbWidth, float bbHeight,  PDFont font) throws IOException {
         int fontSize = 20;
         float textWidth = font.getStringWidth(text) / 1000 * fontSize;
@@ -119,8 +119,7 @@ public class PDFDocument {
 
             contentStream.close();
         } catch (Exception ex) {
-            //lambdaLogger.log("\naddPageWithoutFormatting:ERROR" + ex.getMessage());
-            //throw new AppException(ex.getMessage());
+            throw new RuntimeException("Failed to generate PDF", ex);
         }
     }
 

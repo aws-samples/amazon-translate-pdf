@@ -7,7 +7,7 @@ public class Demo {
 
     public static void main(String[] args) {
         try {
-            if (args.length != 4) {
+            if (args.length < 4) {
                 log.error("arguments sourceLanguage destinationLanguage expected");
                 System.exit(0);
             }
@@ -15,11 +15,16 @@ public class Demo {
             log.info("Starting Translation");
             String sourceLanguage = args[1];
             String destinationLanguage = args[3];
+
+            String externalFontPath = null;
+            if (args.length == 6) {
+            externalFontPath = args[5];
+            }
+
             DemoPdfFromLocalPdf localPdf = new DemoPdfFromLocalPdf();
-            // Change the final param on the next line to true to run in overlay mode, or false to run in minimal mode
-            localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-" + destinationLanguage + ".pdf ", sourceLanguage, destinationLanguage, true);
-            //localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-min-" + destinationLanguage + ".pdf ",
-                    //sourceLanguage, destinationLanguage, false);
+            //Generate 2 PDFs; one with formatting and one without
+            localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-" + destinationLanguage + ".pdf ", sourceLanguage, destinationLanguage, true, externalFontPath);
+            localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-min-" + destinationLanguage + ".pdf ", sourceLanguage, destinationLanguage, false, externalFontPath);
         } catch (Exception e) {
             e.printStackTrace();
         }

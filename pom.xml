@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.amazon.textract.solutions</groupId>
     <artifactId>translate-pdf</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
     <properties>
         <java.version>11</java.version>
         <aws.java.sdk.version>2.20.81</aws.java.sdk.version>
