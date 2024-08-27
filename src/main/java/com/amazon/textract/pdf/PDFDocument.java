@@ -5,8 +5,6 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -27,39 +25,6 @@ public class PDFDocument {
         this.font = font;
     }
     
-    // public PDFont loadFont(String externalFontPath) {
-    //     //PDFont font = null;
-    //     InputStream fontStream = null;
-    //     try { 
-    //         fontStream = PDFDocument.class.getResourceAsStream("/" + externalFontPath);
-    //         if (externalFontPath == null) {
-    //             // Use a default font
-    //             font = PDType1Font.COURIER_BOLD;
-    //         } else {
-    //             if (fontStream == null) {
-    //                 throw new IllegalArgumentException("External font resource not found: " + externalFontPath);
-    //             }
-    
-    //             try {
-    //                 font = PDType0Font.load(document, fontStream, true);
-    //             } catch (IOException e) {
-    //                 throw new RuntimeException("Failed to load external font: " + externalFontPath, e);
-    //             }
-    //         }
-    //     } catch (Exception e) {
-    //         // Handle or log the exception as needed
-    //     } finally {
-    //         try {
-    //             if (fontStream != null) {
-    //                 fontStream.close(); // Closing the fontStream resource
-    //             }
-    //         } catch (IOException e) {
-    //             // Handle or log the exception as needed
-    //         }
-    //     }
-    //     return font;
-    // }
-
     private FontInfo calculateFontSize(String text, float bbWidth, float bbHeight,  PDFont font) throws IOException {
         int fontSize = 20;
         float textWidth = font.getStringWidth(text) / 1000 * fontSize;
@@ -118,7 +83,8 @@ public class PDFDocument {
             }
 
             contentStream.close();
-        } catch (Exception ex) {
+        } 
+        catch (Exception ex) {
             throw new RuntimeException("Failed to generate PDF", ex);
         }
     }

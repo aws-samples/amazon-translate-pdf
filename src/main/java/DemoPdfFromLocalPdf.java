@@ -87,12 +87,13 @@ public class DemoPdfFromLocalPdf {
         if (externalFontPath != null) {
             try{
                 font = PDType0Font.load(new PDDocument(), PDFDocument.class.getResourceAsStream("/" + externalFontPath), true);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             logger.error("Failed to load external font: " + externalFontPath, e);
             font = PDType1Font.COURIER_BOLD; // Use a default font
             }
         }
-        else { //Deefault Font
+        else { //Default Font
             font = PDType1Font.COURIER_BOLD;
         }
         PDFDocument pdfDocument = new PDFDocument(font);

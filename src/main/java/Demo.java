@@ -25,7 +25,8 @@ public class Demo {
             //Generate 2 PDFs; one with formatting and one without
             localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-" + destinationLanguage + ".pdf ", sourceLanguage, destinationLanguage, true, externalFontPath);
             localPdf.run("./documents/SampleInput.pdf", "./documents/SampleOutput-min-" + destinationLanguage + ".pdf ", sourceLanguage, destinationLanguage, false, externalFontPath);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
