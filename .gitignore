@@ -4,6 +4,8 @@
 .classpath
 .project
 .settings
+.vscode
+dependency-reduced-pom.xml
 
 # Package Files #
 *.jar

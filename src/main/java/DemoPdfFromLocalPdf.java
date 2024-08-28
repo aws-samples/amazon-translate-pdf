@@ -3,6 +3,9 @@ import com.amazon.textract.pdf.PDFDocument;
 import com.amazon.textract.pdf.TextLine;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import software.amazon.awssdk.core.SdkBytes;
@@ -75,12 +78,26 @@ public class DemoPdfFromLocalPdf {
         return lines;
     }
 
-    public void run(String documentName, String outputDocumentName, String sourceLanguage, String destinationLanguage, boolean retainFormatting) throws IOException {
+    public void run(String documentName, String outputDocumentName, String sourceLanguage, String destinationLanguage, boolean retainFormatting, String externalFontPath) throws IOException {
 
         logger.info("Generating searchable pdf from: " + documentName);
 
-        PDFDocument pdfDocument = new PDFDocument();
-
+        //if external font is passed, load it
+        PDFont font;
+        if (externalFontPath != null) {
+            try{
+                font = PDType0Font.load(new PDDocument(), PDFDocument.class.getResourceAsStream("/" + externalFontPath), true);
+        }
+        catch (IOException e) {
+            logger.error("Failed to load external font: " + externalFontPath, e);
+            font = PDType1Font.COURIER_BOLD; // Use a default font
+            }
+        }
+        else { //Default Font
+            font = PDType1Font.COURIER_BOLD;
+        }
+        PDFDocument pdfDocument = new PDFDocument(font);
+        
         List<TextLine> lines;
         BufferedImage image;
         ByteArrayOutputStream byteArrayOutputStream;
@@ -101,7 +118,7 @@ public class DemoPdfFromLocalPdf {
             byteArrayOutputStream.flush();
             InputStream sourceStream = new FileInputStream(documentName);
             imageBytes = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
-
+            sourceStream.close();
 
             //Extract text
             lines = extractTextAndTranslate(imageBytes, sourceLanguage, destinationLanguage);

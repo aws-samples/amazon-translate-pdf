@@ -5,7 +5,6 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -16,20 +15,16 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
 
+
 public class PDFDocument {
 
-    //change the font type here
-    final PDFont font = PDType1Font.COURIER_BOLD;
-
     private PDDocument document;
-
-    public PDFDocument(){
+    private PDFont font;
+    public PDFDocument(PDFont font){
         this.document = new PDDocument();
+        this.font = font;
     }
-
-    /*
-    Depending on the input document you can adjust the initial font size and the width and height of the extracted text
-     */
+    
     private FontInfo calculateFontSize(String text, float bbWidth, float bbHeight,  PDFont font) throws IOException {
         int fontSize = 20;
         float textWidth = font.getStringWidth(text) / 1000 * fontSize;
@@ -88,9 +83,9 @@ public class PDFDocument {
             }
 
             contentStream.close();
-        } catch (Exception ex) {
-            //lambdaLogger.log("\naddPageWithoutFormatting:ERROR" + ex.getMessage());
-            //throw new AppException(ex.getMessage());
+        } 
+        catch (Exception ex) {
+            throw new RuntimeException("Failed to generate PDF", ex);
         }
     }
 
@@ -156,4 +151,5 @@ public class PDFDocument {
     public void close() throws IOException {
         this.document.close();
     }
+    
 }
